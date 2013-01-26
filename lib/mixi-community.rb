@@ -49,10 +49,7 @@ module Mixi
       def fetch(fetcher)
         page = fetcher.get(uri)
         @title = page.at('.bbsTitle .title').text
-        $log.info @title
-        $log.info @title.encoding
         @recent_comments = page.at('#bbsComment').at('dl.commentList01').children.select{|e|%w(dt dd).include? e.name}.each_slice(2).map {|dt,dd|
-          puts dt.at('a').attr(:href)
           user_uri = URI.parse(dd.at('dl.commentContent01 dt a').attr(:href))
           user_id = Hash[user_uri.query.split('&').map{|kv|kv.split('=')}]['content_id']
           user_name = dd.at('dl.commentContent01 dt a').text
