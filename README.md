@@ -49,6 +49,7 @@ See source for details.
 ### 0.0.2(unreleased)
 
 * Add readme
+* Add license
 * Fix error when Encoding.default_internal is ASCII_8BIT
 
 ### 0.0.1
