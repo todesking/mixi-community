@@ -49,15 +49,17 @@ module Mixi
       def fetch(fetcher)
         page = fetcher.get(uri)
         @title = page.at('.bbsTitle .title').text
+        $log.info @title
+        $log.info @title.encoding
         @recent_comments = page.at('#bbsComment').at('dl.commentList01').children.select{|e|%w(dt dd).include? e.name}.each_slice(2).map {|dt,dd|
           puts dt.at('a').attr(:href)
           user_uri = URI.parse(dd.at('dl.commentContent01 dt a').attr(:href))
           user_id = Hash[user_uri.query.split('&').map{|kv|kv.split('=')}]['content_id']
           user_name = dd.at('dl.commentContent01 dt a').text
-          body_text = dd.at('dl.commentContent01 dd').text.strip.gsub(/\n\n返信$/, '').gsub(/\r/,"\n")
+          body_text = resolve_encoding(dd.at('dl.commentContent01 dd').text){|t|t.strip.gsub(/\n\n返信$/, '').gsub(/\r/,"\n")}
           comment_id = dt.at('.senderId a').attr(:name).gsub(/^comment_id_(\d+)$/, '\1')
           comment_num = dt.at('.senderId a').text.gsub(/^\[(\d+)\]$/, '\1')
-          time = Time.strptime(dt.at('.date').text, '%Y年%m月%d日 %H:%M')
+          time = resolve_encoding(dt.at('.date').text){|t| Time.strptime(t, '%Y年%m月%d日 %H:%M') }
 
           Comment.new(
             comment_id,
@@ -68,6 +70,24 @@ module Mixi
             time: time,
           )
         }
+      end
+
+      def resolve_encoding(text, &block)
+        # Nokogiriの返す文字列のエンコーディングはEncoding.default_internalに影響される｡
+        # これがUTF-8以外だと正規表現によるマッチに失敗するため対策する必要がある｡
+        # 当面必要ないのでASCII_8BITの場合以外は対処してない
+        if text.encoding == Encoding::UTF_8
+          block.call(text)
+        elsif text.encoding == Encoding::ASCII_8BIT
+          ret = block.call(text.force_encoding(Encoding::UTF_8))
+          if String === ret
+            ret.force_encoding(Encoding::ASCII_8BIT)
+          else
+            ret
+          end
+        else
+          raise "Unsupported encoding: #{text.encoding}"
+        end
       end
 
       class Comment
