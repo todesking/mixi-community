@@ -46,7 +46,7 @@ See source for details.
 
 ## Changes
 
-### 0.0.2(unreleased)
+### 0.0.2
 
 * Add readme
 * Add license
