@@ -56,7 +56,7 @@ module Mixi
           body_text = resolve_encoding(dd.at('dl.commentContent01 dd').text){|t|t.strip.gsub(/\n\n返信$/, '').gsub(/\r/,"\n")}
           comment_id = dt.at('.senderId a').attr(:name).gsub(/^comment_id_(\d+)$/, '\1')
           comment_num = dt.at('.senderId a').text.gsub(/^\[(\d+)\]$/, '\1')
-          time = resolve_encoding(dt.at('.date').text){|t| Time.strptime(t, '%Y年%m月%d日 %H:%M') }
+          time = resolve_encoding(dt.at('.date').text) {|t| parse_comment_time(t) }
 
           Comment.new(
             comment_id,
@@ -84,6 +84,16 @@ module Mixi
           end
         else
           raise "Unsupported encoding: #{text.encoding}"
+        end
+      end
+
+      def parse_comment_time(time_str)
+        format = '%m月%d日 %H:%M'
+        time_str = time_str.strip
+        begin
+          Time.strptime(time_str, format)
+        rescue ArgumentError
+          raise ArgumentError, "Time format not matched: format=#{format}, input=#{time_str}"
         end
       end
 
