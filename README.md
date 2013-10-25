@@ -46,6 +46,10 @@ See source for details.
 
 ## Changes
 
+### 0.0.4
+
+* Support new date format(again!)
+
 ### 0.0.3
 
 * Support new date format
