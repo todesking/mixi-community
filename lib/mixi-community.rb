@@ -88,12 +88,20 @@ module Mixi
       end
 
       def parse_comment_time(time_str)
-        format = '%m月%d日 %H:%M'
         time_str = time_str.strip
+        formats = ['%Y年%m月%d日 %H:%M', '%m月%d日 %H:%M']
+        formats.each do|format|
+          time = try_strptime(format, time_str)
+          return time if time
+        end
+        raise ArgumentError, "Time format not matched: formats=#{formats.join(', ')}, input=#{time_str}"
+      end
+
+      def try_strptime(format, str)
         begin
-          Time.strptime(time_str, format)
+          Time.strptime(str, format)
         rescue ArgumentError
-          raise ArgumentError, "Time format not matched: format=#{format}, input=#{time_str}"
+          nil
         end
       end
 
