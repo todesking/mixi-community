@@ -46,7 +46,7 @@ See source for details.
 
 ## Changes
 
-### 0.0.5(Unreleased)
+### 0.0.5
 
 * Support new version HTML('jp.mixi.community.widget.deferedlink').
 * Remove trashes from BBS comment text.
