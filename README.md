@@ -46,6 +46,10 @@ See source for details.
 
 ## Changes
 
+### 0.0.5(Unreleased)
+
+* Support new version HTML('jp.mixi.community.widget.deferedlink').
+
 ### 0.0.4
 
 * Support new date format(again!)

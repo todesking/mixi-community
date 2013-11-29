@@ -3,6 +3,12 @@ require 'mechanize'
 
 module Mixi
   class Community
+    def self.read_href(elm)
+      URI.parse(
+         elm.attr('data-url') || elm.attr(:href)
+      )
+    end
+
     def initialize(id)
       @id = id
     end
@@ -17,7 +23,7 @@ module Mixi
     def fetch(fetcher)
       page = fetcher.get(uri)
       @recent_bbses = page.search('#newCommunityTopic .contents dl dd a').map {|a|
-        bbs_uri = URI.parse(a.attr(:href))
+        bbs_uri = Mixi::Community.read_href(a)
         bbs_title = a.text
         bbs_id = Hash[bbs_uri.query.split('&').map{|kv|kv.split('=')}]['id']
 
@@ -50,7 +56,7 @@ module Mixi
         page = fetcher.get(uri)
         @title = page.at('.bbsTitle .title').text
         @recent_comments = page.at('#bbsComment').at('dl.commentList01').children.select{|e|%w(dt dd).include? e.name}.each_slice(2).map {|dt,dd|
-          user_uri = URI.parse(dd.at('dl.commentContent01 dt a').attr(:href))
+          user_uri = Mixi::Community.read_href(dd.at('dl.commentContent01 dt a'))
           user_id = Hash[user_uri.query.split('&').map{|kv|kv.split('=')}]['content_id']
           user_name = dd.at('dl.commentContent01 dt a').text
           body_text = resolve_encoding(dd.at('dl.commentContent01 dd').text){|t|t.strip.gsub(/\n\n返信$/, '').gsub(/\r/,"\n")}
