@@ -50,6 +50,7 @@ See source for details.
 
 * Support new version HTML('jp.mixi.community.widget.deferedlink').
 * Remove trashes from BBS comment text.
+* Remove forwarding/trailing white spaces from users name.
 
 ### 0.0.4
 
