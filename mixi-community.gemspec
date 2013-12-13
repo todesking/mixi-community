@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name          = "mixi-community"
-  gem.version       = "0.0.5"
+  gem.version       = "0.0.6"
   gem.authors       = ["todesking"]
   gem.email         = ["discommunicative@gmail.com"]
   gem.summary       = %q{Access to Mixi community.}

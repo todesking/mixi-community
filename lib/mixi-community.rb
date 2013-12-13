@@ -112,7 +112,7 @@ module Mixi
       end
 
       def read_bbs_text(elm)
-        text = elm.children.reject {|c| c.name == 'ul' }.map(&:text).join
+        text = elm.children.select {|c| c.name == 'text' }.map(&:text).join
         text.strip.gsub(/\r/,"\n")
       end
 

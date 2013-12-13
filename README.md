@@ -46,6 +46,10 @@ See source for details.
 
 ## Changes
 
+### 0.0.6
+
+* Support new version HTML
+
 ### 0.0.5
 
 * Support new version HTML('jp.mixi.community.widget.deferedlink').
