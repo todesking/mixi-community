@@ -46,6 +46,10 @@ See source for details.
 
 ## Changes
 
+### 0.0.7(unreleased)
+
+* Support new version HTML
+
 ### 0.0.6
 
 * Support new version HTML
